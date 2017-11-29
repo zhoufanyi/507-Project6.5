@@ -1,6 +1,6 @@
 # 507 Fall 2017 - Project 6.5
 
-##Part 1 (200 points)
+## Part 1 (200 points)
 
 Add a route `/word/<new_word>`
 
@@ -22,9 +22,11 @@ There is already code in it to make a request to flickr for info about photos ta
 * Your goal is to edit the route code a little bit so that the template provided, `photo_info.html` shows data when you go to e.g. `http://locahost:5000/mountains/2` or `http://localhost:5000/sunset/1`, or whatever.
 
 
-> At the top, the number of photos that were retrieved (1 photo was retrieved or # photos were retrieved, with the # replaced by whatever number it was)
+    * At the top, the number of photos that were retrieved (1 photo was retrieved or # photos were retrieved, with the # replaced by whatever number it was)
 
-> And then, a bulletpoint “unordered list” (`<ul>`) of each of those photos’ titles.
+    * And then, a bulletpoint “unordered list” (`<ul>`) of each of those photos’ titles.
+
+    * [Like this](https://www.dropbox.com/s/uxdhm699lejjmsu/Screenshot%202017-11-28%2022.08.07.png?dl=0)
 
 You’ll need to add a small amount of code at the end of the view function, and you’ll need to edit the invocation of `render_template` to send the right data to the view.
 
