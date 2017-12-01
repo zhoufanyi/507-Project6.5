@@ -1,11 +1,24 @@
 # Import statements necessary
 from flask import Flask, render_template
 from flask_script import Manager
+import requests
+import secret
+import json
+
+
 
 # Set up application
 app = Flask(__name__)
 
 manager = Manager(app)
+
+def get_rhym(new_word,Max = 1):
+	baseurl = 'https://api.datamuse.com/words'
+	params = {}
+	params['max'] = Max
+	params['rel_rhy'] = new_word
+	response = requests.get(baseurl,params = params)
+	return response.json()
 
 # Routes
 
@@ -30,6 +43,11 @@ def basic_values_list(name):
 
 
 ## PART 1: Add another route /word/<new_word> as the instructions describe.
+@app.route('/word/<new_word>')
+def old_string(new_word):
+	result = get_rhym(new_word)
+	rhym_word = result[0].get('word')
+	return '<h2>The word that rhymes with <i>{}</i> is <i>{}</i></h2>'.format(new_word,rhym_word)
 
 
 ## PART 2: Edit the following route so that the photo_tags.html template will render
@@ -37,7 +55,7 @@ def basic_values_list(name):
 def photo_titles(tag, num):
     # HINT: Trying out the flickr accessing code in another file and seeing what data you get will help debug what you need to add and send to the template!
     # HINT 2: This is almost all the same kind of nested data investigation you've done before!
-    FLICKR_KEY = "" # TODO: fill in a flickr key
+    FLICKR_KEY = secret.client_key # TODO: fill in a flickr key
     baseurl = 'https://api.flickr.com/services/rest/'
     params = {}
     params['api_key'] = FLICKR_KEY
@@ -49,12 +67,13 @@ def photo_titles(tag, num):
     response_obj = requests.get(baseurl, params=params)
     trimmed_text = response_obj.text[14:-1]
     flickr_data = json.loads(trimmed_text)
-    # TODO: Add some code here that processes flickr_data in some way to get what you nested
+    # TODO: Add some code here that 	processes flickr_data in some way to get what you nested
+    num_of_photo = flickr_data.get('photos').get('perpage')
+    title_list = []
+    for item in flickr_data.get('photos').get('photo'):
+    	title_list.append(item.get('title'))
     # TODO: Edit the invocation to render_template to send the data you need
-    return render_template('photo_tags.html')
-
-
-
+    return render_template('photo_info.html',num=num_of_photo,photo_titles = title_list)
 
 if __name__ == '__main__':
     manager.run() # Runs the flask server in a special way that makes it nice to debug
